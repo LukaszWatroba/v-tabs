@@ -39,7 +39,7 @@ function vPagesDirective () {
 
         var mergedControl = angular.extend({}, scope.internalControl, scope.control);
         scope.control = scope.internalControl = mergedControl;
-      } 
+      }
       else {
         scope.control = scope.internalControl;
       }
@@ -51,7 +51,7 @@ function vPagesDirective () {
 // vPages directive controller
 function vPagesDirectiveController ($scope) {
   var ctrl = this;
-  
+
   $scope.pages = [];
 
   ctrl.getPageByIndex = function (index) {
@@ -60,7 +60,7 @@ function vPagesDirectiveController ($scope) {
 
   ctrl.getPageIndex = function (page) {
     return $scope.pages.indexOf(page);
-  }
+  };
 
   ctrl.addPage = function (page) {
     $scope.pages.push(page);
@@ -123,4 +123,3 @@ function vPagesDirectiveController ($scope) {
   };
 }
 vPagesDirectiveController.$inject = ['$scope'];
-
