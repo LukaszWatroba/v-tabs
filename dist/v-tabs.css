@@ -10,9 +10,28 @@
   vTextfield
  ***************************************/
 /**
- * Example HTML: input
+ * Example HTML:
  *
-  
+   <v-tabs class="vTabs--default" horizontal active="activeTabIndex">
+     <v-tab>[title]</v-tab>
+     <v-tab>[title]</v-tab>
+     <v-tab>[title]</v-tab>
+   </v-tabs>
+
+   <v-pages class="vPages--default" active="activeTabIndex">
+     <v-page>
+       <h3>[title]</h3>
+       <p>[content]</p>
+     </v-page>
+     <v-page>
+       <h3>[title]</h3>
+       <p>[content]</p>
+     </v-page>
+     <v-page>
+       <h3>[title]</h3>
+       <p>[content]</p>
+     </v-page>
+   </v-pages>
  */
 /***************************************
   Tabs
