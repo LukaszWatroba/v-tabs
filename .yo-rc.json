@@ -1,0 +1,29 @@
+{
+  "generator-angularjs-library": {
+    "props": {
+      "author": {
+        "name": "Łukasz Wątroba",
+        "email": "l@lukaszwatroba.com"
+      },
+      "libraryName": {
+        "original": "v-textfield",
+        "camelized": "vTextfield",
+        "dasherized": "v-textfield",
+        "slugified": "v-textfield",
+        "parts": [
+          "v",
+          "textfield"
+        ]
+      },
+      "includeModuleDirectives": true,
+      "includeModuleFilters": false,
+      "includeModuleServices": false,
+      "includeAngularModuleResource": false,
+      "includeAngularModuleCookies": false,
+      "includeAngularModuleSanitize": false,
+      "librarySrcDirectory": "src/vTextfield",
+      "libraryUnitTestDirectory": "test/unit/vTextfield",
+      "libraryUnitE2eDirectory": "test/e2e/vTextfield"
+    }
+  }
+}

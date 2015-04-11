@@ -1,0 +1,28 @@
+// -------------------------------------
+// Settings
+// -------------------------------------
+
+
+$v-tabs-default-theme:    true !default;
+$v-pages-default-theme:   true !default;
+
+
+// Tabs
+// -------------------------------------
+$v-tabs-spacing:            10px !default;
+$v-tabs-default-color:      #D8D8D8 !default;
+$v-tabs-active-color:       #2196F3 !default;
+
+$v-tabs-tab-min-width:      100px !default;
+
+$v-tabs-hover-duration:       0.25s !default;
+$v-tabs-activate-duration:    0.5s  !default;
+$v-tabs-deactivate-duration:  0.25s !default;
+
+
+// Pages
+// -------------------------------------
+
+$v-pages-spacing:  20px !default;
+$v-pages-activate-duration:  $v-tabs-activate-duration !default;
+

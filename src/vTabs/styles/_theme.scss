@@ -1,0 +1,111 @@
+/* Theme: Tabs
+ ***************************************/
+
+
+.vTabs--default {
+  padding-bottom: $v-tabs-spacing;
+
+  v-tab {
+    transition: color $v-tabs-hover-duration;
+    outline: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      display: block;
+      left: 0;
+      background-color: $v-tabs-default-color;
+      transition: background-color $v-tabs-activate-duration $v-tabs-deactivate-duration;
+    }
+
+    &.is-active {
+      &::after {
+        background-color: $v-tabs-active-color;
+      }
+    }
+
+    &.is-active-remove {
+      &::after {
+        transition: background-color $v-tabs-deactivate-duration;
+      }
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &:hover,
+    &:focus {
+      color: $v-tabs-active-color;
+    }
+
+    &[disabled] {
+      opacity: 0.5;
+
+      &:hover,
+      &:focus {
+        color: inherit;
+      }
+    }
+  }
+
+  &[horizontal] v-tab {
+    padding: $v-tabs-spacing / 2;
+
+    &::after {
+      width: 100%;
+      height: 2px;
+      bottom: 0;
+    }
+  }
+
+  &[vertical] v-tab {
+    padding: $v-tabs-spacing / 2 $v-tabs-spacing * 2;
+
+    &::after {
+      width: 2px;
+      height: 100%;
+      top: 0;
+      bottom: auto;
+    }
+  }
+}
+
+
+
+/* Theme: Pages
+ ***************************************/
+
+
+.vPages--default {
+  margin: $v-tabs-spacing 0;
+
+  v-page {
+    will-change: transform, opacity;
+    opacity: 0;
+    transform: translateY(30px);
+
+    &.is-active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    &.is-active-add {
+      transition: opacity $v-tabs-activate-duration $v-tabs-deactivate-duration, transform $v-tabs-activate-duration $v-tabs-deactivate-duration;
+    }
+
+    &.is-active-remove {
+      position: absolute;
+      width: 100%;
+      top: 0;
+      left: 0;
+      transform: translateY(0);
+      transition: opacity $v-tabs-deactivate-duration, transform $v-tabs-deactivate-duration;
+    }
+
+    &.is-active-add,
+    &.is-active-remove {
+      display: block;
+    }
+  }
+}

@@ -1,0 +1,150 @@
+/**
+ * vTabs - dynamic, flexible and accessible AngularJS tabs.
+ * @version v0.0.1
+ * @link http://lukaszwatroba.github.io/v-tabs
+ * @author Łukasz Wątroba <l@lukaszwatroba.com>
+ * @license MIT License, http://www.opensource.org/licenses/MIT
+ */
+
+/***************************************
+  vTextfield
+ ***************************************/
+/**
+ * Example HTML: input
+ *
+  
+ */
+/***************************************
+  Tabs
+ ***************************************/
+v-tabs {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  min-width: 100%; }
+
+v-tab {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  position: relative;
+  cursor: pointer;
+  color: inherit; }
+  v-tab.is-active {
+    color: #2196F3; }
+  v-tab[disabled] {
+    cursor: not-allowed; }
+
+v-tabs[horizontal] {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: stretch;
+  -webkit-align-items: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch;
+  overflow-x: auto; }
+  v-tabs[horizontal] v-tab {
+    text-align: center;
+    min-width: 100px; }
+
+v-tabs[vertical] {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column; }
+  v-tabs[vertical] v-tab {
+    text-align: left; }
+
+/***************************************
+  Pages
+ ***************************************/
+v-pages {
+  display: block;
+  position: relative; }
+
+v-page {
+  display: none;
+  position: relative; }
+  v-page.is-active {
+    display: block; }
+
+/* Theme: Tabs
+ ***************************************/
+.vTabs--default {
+  padding-bottom: 10px; }
+  .vTabs--default v-tab {
+    -webkit-transition: color 0.25s;
+            transition: color 0.25s;
+    outline: none; }
+    .vTabs--default v-tab::after {
+      content: '';
+      position: absolute;
+      display: block;
+      left: 0;
+      background-color: #D8D8D8;
+      -webkit-transition: background-color 0.5s 0.25s;
+              transition: background-color 0.5s 0.25s; }
+    .vTabs--default v-tab.is-active::after {
+      background-color: #2196F3; }
+    .vTabs--default v-tab.is-active-remove::after {
+      -webkit-transition: background-color 0.25s;
+              transition: background-color 0.25s; }
+    .vTabs--default v-tab:focus {
+      outline: none; }
+    .vTabs--default v-tab:hover, .vTabs--default v-tab:focus {
+      color: #2196F3; }
+    .vTabs--default v-tab[disabled] {
+      opacity: 0.5; }
+      .vTabs--default v-tab[disabled]:hover, .vTabs--default v-tab[disabled]:focus {
+        color: inherit; }
+  .vTabs--default[horizontal] v-tab {
+    padding: 5px; }
+    .vTabs--default[horizontal] v-tab::after {
+      width: 100%;
+      height: 2px;
+      bottom: 0; }
+  .vTabs--default[vertical] v-tab {
+    padding: 5px 20px; }
+    .vTabs--default[vertical] v-tab::after {
+      width: 2px;
+      height: 100%;
+      top: 0;
+      bottom: auto; }
+
+/* Theme: Pages
+ ***************************************/
+.vPages--default {
+  margin: 10px 0; }
+  .vPages--default v-page {
+    will-change: transform, opacity;
+    opacity: 0;
+    -webkit-transform: translateY(30px);
+        -ms-transform: translateY(30px);
+            transform: translateY(30px); }
+    .vPages--default v-page.is-active {
+      opacity: 1;
+      -webkit-transform: translateY(0);
+          -ms-transform: translateY(0);
+              transform: translateY(0); }
+    .vPages--default v-page.is-active-add {
+      -webkit-transition: opacity 0.5s 0.25s, -webkit-transform 0.5s 0.25s;
+              transition: opacity 0.5s 0.25s, transform 0.5s 0.25s; }
+    .vPages--default v-page.is-active-remove {
+      position: absolute;
+      width: 100%;
+      top: 0;
+      left: 0;
+      -webkit-transform: translateY(0);
+          -ms-transform: translateY(0);
+              transform: translateY(0);
+      -webkit-transition: opacity 0.25s, -webkit-transform 0.25s;
+              transition: opacity 0.25s, transform 0.25s; }
+    .vPages--default v-page.is-active-add, .vPages--default v-page.is-active-remove {
+      display: block; }

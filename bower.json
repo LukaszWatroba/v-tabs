@@ -1,0 +1,30 @@
+{
+  "name": "v-tabs",
+  "description": "vTabs - dynamic, flexible and accessible AngularJS tabs.",
+  "keywords": [
+    "AngularJS",
+    "tabs",
+    "tab",
+    "component",
+    "directive",
+    "module"
+  ],
+  "authors": [
+    "Łukasz Wątroba <l@lukaszwatroba.com>"
+  ],
+  "main": [
+    "dist/v-tabs.js",
+    "dist/v-tabs.css"
+  ],
+  "dependencies": {
+    "angular": "~1.3.13",
+    "angular-animate": "~1.3.13",
+    "angular-touch": "~1.3.13",
+    "angular-sanitize": "~1.3.13"
+  },
+  "devDependencies": {
+    "angular-mocks": "~1.2.21",
+    "angular-scenario": "~1.2.21",
+    "valitycss": "~0.3.2"
+  }
+}
