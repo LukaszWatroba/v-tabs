@@ -1,5 +1,5 @@
 # Dynamic, flexible and accessible AngularJS tabs.
-  
+
   - Easy to use and customize
   - Keyboard accessible
   - Works with (or without) `ng-repeat`
@@ -11,7 +11,7 @@
 
 ## Usage
 
-  - Download files [from the github repo](./dist), or install via [Bower](http://bower.io/) `bower install v-tabs`
+  - If you use [bower](http://bower.io/) or [npm](https://www.npmjs.com/), just `bower/npm install v-tabs`. If not, download files [from the github repo](./dist).
 
   - Include `angular.js`, `angular-animate.js`, `v-tabs.js`, and `v-tabs.css`:
   ```html
@@ -100,5 +100,3 @@ vTabs manages keyboard focus and adds some common aria-* attributes. BUT you sho
   <v-page id="page0{{$index}}" aria-labelledby="tab0{{$index}}" ng-repeat="page in pages" ng-bind="page.content"></v-page>
 </v-pages>
 ```
-
-
