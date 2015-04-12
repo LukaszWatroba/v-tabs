@@ -1,13 +1,15 @@
 {
   "name": "v-tabs",
   "description": "vTabs - dynamic, flexible and accessible AngularJS tabs.",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "author": "Łukasz Wątroba <l@lukaszwatroba.com>",
   "license": "MIT",
   "keywords": [
-    "AngularJS",
+    "angular",
     "tabs",
     "tab",
+    "vertical",
+    "horizontal",
     "component",
     "directive",
     "module"
