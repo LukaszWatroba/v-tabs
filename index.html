@@ -19,10 +19,10 @@
     <link href="./dist/v-tabs.css" rel="stylesheet">
 
     <!-- Scripts -->
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular-animate.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular-touch.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular-sanitize.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-touch.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-sanitize.min.js"></script>
     <!-- <script src="./bower/angular/angular.js"></script> -->
     <!-- <script src="./bower/angular-animate/angular-animate.js"></script> -->
     <!-- <script src="./bower/angular-touch/angular-touch.js"></script> -->
@@ -50,10 +50,10 @@
       <div class="u-marginBl">
 
         <section class="u-paddingBl">
-          <h3 class="u-marginBm">Horizontal Tabs</h3>
+          <h3 class="u-marginBl">Horizontal Tabs</h3>
 
           <v-tabs class="vTabs--default" horizontal control="horizontalTabs" active="horizontalTabs.active">
-            <v-tab id="tab0{{$index}}" aria-controls="page0{{$index}}" ng-repeat="page in pages" ng-bind="page.title"></v-tab>
+            <v-tab id="tab0{{$index}}" aria-controls="page0{{$index}}" ng-repeat="page in pages" ng-disabled="page.isDisabled" ng-bind="page.title"></v-tab>
           </v-tabs>
 
           <v-pages class="vPages--default" active="horizontalTabs.active" ng-swipe-left="horizontalTabs.next()" ng-swipe-right="horizontalTabs.previous()">
@@ -65,13 +65,13 @@
         </section>
 
         <section class="u-paddingBl">
-          <h3 class="u-marginBm">Vertical Tabs</h3>
+          <h3 class="u-marginBl">Vertical Tabs</h3>
 
           <div class="Grid Grid--gutters">
             <div class="Grid-cell u-size3of12">
 
               <v-tabs class="vTabs--default" vertical control="verticalTabs" active="verticalTabs.active">
-                <v-tab id="tab1{{$index}}" aria-controls="page1{{$index}}" ng-repeat="page in pages" ng-disabled="$last" ng-bind="page.title"></v-tab>
+                <v-tab id="tab1{{$index}}" aria-controls="page1{{$index}}" ng-repeat="page in pages" ng-disabled="page.isDisabled" ng-bind="page.title"></v-tab>
               </v-tabs>
 
             </div>
@@ -84,9 +84,13 @@
                 </v-page>
               </v-pages>
 
-              <div class="u-cf u-marginTl">
-                <button type="button" class="Button Button--default u-pullLeft" ng-click="verticalTabs.previous()">Previous</button>
-                <button type="button" class="Button Button--default u-pullRight" ng-click="verticalTabs.next()">Next</button>
+              <div class="ButtonGroup ButtonGroup--hz ButtonGroup--collapse u-marginTl">
+                <div class="ButtonGroup-item">
+                  <button class="Button Button--default" ng-click="verticalTabs.previous()">Previous</button>
+                </div>
+                <div class="ButtonGroup-item">
+                  <button class="Button Button--default" ng-click="verticalTabs.next()">Next</button>
+                </div>
               </div>
 
             </div>
