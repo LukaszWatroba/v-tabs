@@ -12,7 +12,6 @@ v-tabs {
 v-tab {
   flex: 1;
   position: relative;
-  cursor: pointer;
   color: inherit;
 
   &.is-active {
@@ -20,8 +19,12 @@ v-tab {
   }
 
   &[disabled] {
-    cursor: not-allowed;
+    pointer-events: none;
   }
+}
+
+v-tab:not([inactive]) {
+  cursor: pointer;
 }
 
 v-tabs[horizontal] {

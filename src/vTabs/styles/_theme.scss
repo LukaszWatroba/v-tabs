@@ -3,10 +3,10 @@
 
 
 .vTabs--default {
-  padding-bottom: $v-tabs-spacing;
+  margin-bottom: $v-tabs-spacing;
 
   v-tab {
-    transition: color $v-tabs-hover-duration;
+    transition: color $v-tabs-hover-animation-duration;
     outline: none;
 
     &::after {
@@ -15,7 +15,7 @@
       display: block;
       left: 0;
       background-color: $v-tabs-default-color;
-      transition: background-color $v-tabs-activate-duration $v-tabs-deactivate-duration;
+      transition: background-color $v-tabs-enter-animation-duration $v-tabs-leave-animation-duration;
     }
 
     &.is-active {
@@ -26,7 +26,7 @@
 
     &.is-active-remove {
       &::after {
-        transition: background-color $v-tabs-deactivate-duration;
+        transition: background-color $v-tabs-leave-animation-duration;
       }
     }
 
@@ -40,7 +40,7 @@
     }
 
     &[disabled] {
-      opacity: 0.5;
+      opacity: $v-tabs-disabled-opacity;
 
       &:hover,
       &:focus {
@@ -60,7 +60,7 @@
   }
 
   &[vertical] v-tab {
-    padding: $v-tabs-spacing / 2 $v-tabs-spacing * 2;
+    padding: $v-tabs-spacing / 2 $v-tabs-spacing;
 
     &::after {
       width: 2px;
@@ -78,7 +78,7 @@
 
 
 .vPages--default {
-  margin: $v-tabs-spacing 0;
+  margin-bottom: $v-tabs-spacing;
 
   v-page {
     will-change: transform, opacity;
@@ -91,7 +91,7 @@
     }
 
     &.is-active-add {
-      transition: opacity $v-tabs-activate-duration $v-tabs-deactivate-duration, transform $v-tabs-activate-duration $v-tabs-deactivate-duration;
+      transition: all $v-pages-enter-animation-duration $v-pages-leave-animation-duration;
     }
 
     &.is-active-remove {
@@ -100,7 +100,7 @@
       top: 0;
       left: 0;
       transform: translateY(0);
-      transition: opacity $v-tabs-deactivate-duration, transform $v-tabs-deactivate-duration;
+      transition: all $v-pages-leave-animation-duration;
     }
 
     &.is-active-add,

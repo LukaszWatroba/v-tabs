@@ -11,18 +11,21 @@ function vTabsDirective () {
     transclude: true,
     scope: {
       activeIndex: '=?active',
-      control: '=?'
+      control: '=?',
+      id: '@?'
     },
     controller: vTabsDirectiveController,
     controllerAs: 'tabsCtrl',
     link: function (scope, iElement, iAttrs, ctrl, transclude) {
-      transclude(scope.$parent, function (clone) {
+      transclude(scope.$parent.$new(), function (clone, transclusionScope) {
+        transclusionScope.$tabs = scope.internalControl;
+        if (scope.id) { transclusionScope.$tabs.id = scope.id; }
         iElement.append(clone);
       });
 
-      var protectedApiMethods = ['next', 'previous', 'activate'];
-
       function checkCustomControlAPIMethods () {
+        var protectedApiMethods = ['next', 'previous', 'activate'];
+
         angular.forEach(protectedApiMethods, function (iteratedMethodName) {
           if (scope.control[iteratedMethodName]) {
             throw new Error('The `' + iteratedMethodName + '` method can not be overwritten');
@@ -43,6 +46,11 @@ function vTabsDirective () {
       else {
         scope.control = scope.internalControl;
       }
+
+      scope.$applyAsync(function () {
+        var eventName = (angular.isDefined(ctrl.getTabsId())) ? ctrl.getTabsId() + ':onReady' : 'vTabs:onReady';
+        scope.$emit(eventName);
+      });
     }
   };
 }
@@ -54,21 +62,35 @@ function vTabsDirectiveController ($scope) {
 
   $scope.tabs = [];
 
-  ctrl.getTabByIndex = function (index) {
+  ctrl.getTabsId = function getTabsId () {
+    return $scope.id;
+  };
+
+  ctrl.getTabByIndex = function getTabByIndex (index) {
     return $scope.tabs[index];
   };
 
-  ctrl.getTabIndex = function (tab) {
+  ctrl.getTabIndex = function getTabIndex (tab) {
     return $scope.tabs.indexOf(tab);
   };
+
+  ctrl.getTabIndexById = function getTabIndexById (id) {
+    var length = $scope.tabs.length,
+        index = null;
+
+    for (var i = 0; i < length; i++) {
+      var iteratedTab = $scope.tabs[i];
+      if (iteratedTab.id && iteratedTab.id === id) { index = i; }
+    }
+
+    return index;
+  }
 
   ctrl.addTab = function (tab) {
     $scope.tabs.push(tab);
 
-    var tabIndex = $scope.tabs.length - 1;
-
-    if (tabIndex === $scope.activeIndex) {
-      tab.isActive = true;
+    if ($scope.activeIndex === ctrl.getTabIndex(tab)) {
+      ctrl.activate(tab);
     }
   };
 
@@ -116,7 +138,6 @@ function vTabsDirectiveController ($scope) {
 
   ctrl.next = function () {
     var newActiveIndex = $scope.activeIndex + 1;
-
     if (newActiveIndex > $scope.tabs.length - 1) {
       newActiveIndex = 0;
     }
@@ -126,7 +147,6 @@ function vTabsDirectiveController ($scope) {
 
   ctrl.previous = function () {
     var newActiveIndex = $scope.activeIndex - 1;
-
     if (newActiveIndex < 0) {
       newActiveIndex = $scope.tabs.length - 1;
     }
@@ -153,13 +173,12 @@ function vTabsDirectiveController ($scope) {
     if (newValue === oldValue) { return; }
 
     var tabToActivate = ctrl.getTabByIndex(newValue);
-
-    if (tabToActivate.disabled) {
-      $scope.activeIndex = oldValue;
+    if (tabToActivate.isDisabled) {
+      $scope.activeIndex = (angular.isDefined(oldValue)) ? oldValue : 0;
       return false;
     }
 
-    ctrl.activate( ctrl.getTabByIndex(newValue) );
+    ctrl.activate(tabToActivate);
   });
 
   // API
@@ -170,8 +189,12 @@ function vTabsDirectiveController ($scope) {
     previous: function () {
       ctrl.previous();
     },
-    activate: function (index) {
-      $scope.activeIndex = index;
+    activate: function (indexOrId) {
+      if (angular.isString(indexOrId)) {
+        $scope.activeIndex = ctrl.getTabIndexById(indexOrId);
+      } else {
+        $scope.activeIndex = indexOrId;
+      }
     }
   };
 }

@@ -11,18 +11,21 @@ function vPagesDirective () {
     transclude: true,
     scope: {
       activeIndex: '=?active',
-      control: '=?'
+      control: '=?',
+      id: '@?'
     },
     controller: vPagesDirectiveController,
     controllerAs: 'pagesCtrl',
     link: function (scope, iElement, iAttrs, ctrl, transclude) {
-      transclude(scope.$parent, function (clone) {
+      transclude(scope.$parent.$new(), function (clone, transclusionScope) {
+        transclusionScope.$pages = scope.internalControl;
+        if (scope.id) { transclusionScope.$pages.id = scope.id; }
         iElement.append(clone);
       });
 
-      var protectedApiMethods = ['next', 'previous', 'activate'];
-
       function checkCustomControlAPIMethods () {
+        var protectedApiMethods = ['next', 'previous', 'activate'];
+
         angular.forEach(protectedApiMethods, function (iteratedMethodName) {
           if (scope.control[iteratedMethodName]) {
             throw new Error('The `' + iteratedMethodName + '` method can not be overwritten');
@@ -43,6 +46,11 @@ function vPagesDirective () {
       else {
         scope.control = scope.internalControl;
       }
+
+      scope.$applyAsync(function () {
+        var eventName = (angular.isDefined(ctrl.getPagesId())) ? ctrl.getPagesId() + ':onReady' : 'vPages:onReady';
+        scope.$emit(eventName);
+      });
     }
   };
 }
@@ -54,6 +62,10 @@ function vPagesDirectiveController ($scope) {
 
   $scope.pages = [];
 
+  ctrl.getPagesId = function getPagesId () {
+    return $scope.id;
+  };
+
   ctrl.getPageByIndex = function (index) {
     return $scope.pages[index];
   };
@@ -62,17 +74,28 @@ function vPagesDirectiveController ($scope) {
     return $scope.pages.indexOf(page);
   };
 
+  ctrl.getPageIndexById = function getPageIndexById (id) {
+    var length = $scope.pages.length,
+        index = null;
+
+    for (var i = 0; i < length; i++) {
+      var iteratedPage = $scope.tabs[i];
+      if (iteratedPage.id && iteratedPage.id === id) { index = i; }
+    }
+
+    return index;
+  }
+
   ctrl.addPage = function (page) {
     $scope.pages.push(page);
 
-    if ($scope.pages.length - 1 === $scope.activeIndex) {
+    if ($scope.activeIndex === ctrl.getPageIndex(page)) {
       ctrl.activate(page);
     }
   };
 
   ctrl.next = function () {
     var newActiveIndex = $scope.activeIndex + 1;
-
     if (newActiveIndex > $scope.pages.length - 1) {
       newActiveIndex = 0;
     }
@@ -82,7 +105,6 @@ function vPagesDirectiveController ($scope) {
 
   ctrl.previous = function () {
     var newActiveIndex = $scope.activeIndex - 1;
-
     if (newActiveIndex < 0) {
       newActiveIndex = $scope.pages.length - 1;
     }
@@ -106,7 +128,14 @@ function vPagesDirectiveController ($scope) {
 
   $scope.$watch('activeIndex', function (newValue, oldValue) {
     if (newValue === oldValue) { return; }
-    ctrl.activate( ctrl.getPageByIndex(newValue) );
+
+    var pageToActivate = ctrl.getPageByIndex(newValue);
+    if (pageToActivate.isDisabled) {
+      $scope.activeIndex = (angular.isDefined(oldValue)) ? oldValue : 0;
+      return false;
+    }
+
+    ctrl.activate(pageToActivate);
   });
 
   // API
@@ -118,7 +147,11 @@ function vPagesDirectiveController ($scope) {
       ctrl.previous();
     },
     activate: function (index) {
-      $scope.activeIndex = index;
+      if (angular.isString(indexOrId)) {
+        $scope.activeIndex = ctrl.getPageIndexById(indexOrId);
+      } else {
+        $scope.activeIndex = indexOrId;
+      }
     }
   };
 }
