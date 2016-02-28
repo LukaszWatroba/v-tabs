@@ -67,9 +67,9 @@
 
 ## API
 
-#### Control
+#### Control attribute
 
-Use `control` attribute to control vTabs or vPages from it's parent scope:
+Use the attribute to control vTabs or vPages from it's parent scope using the following methods:
 
 - `activate(indexOrId)`
 - `next()`
@@ -80,7 +80,7 @@ Use `control` attribute to control vTabs or vPages from it's parent scope:
   <v-tab ng-repeat="page in pages" ng-bind="page.title"></v-tab>
 </v-tabs>
 
-<v-pages class="vPages--default" active="tabs.active" ng-swipe-left="tabs.next()" ng-swipe-right="tabs.previous()">
+<v-pages class="vPages--default" active="tabs.active">
   <v-page ng-repeat="page in pages" ng-bind="page.content"></v-page>
 </v-pages>
 
@@ -90,7 +90,7 @@ Use `control` attribute to control vTabs or vPages from it's parent scope:
 
 #### Transcluded scope
 
-To control the directive from it's transcluded scope, you can use `$accordion` and `$pane` properties.
+To control the directive from it's transcluded scope, use the following properties:
 
 ##### $tabs
 
@@ -124,7 +124,7 @@ To control the directive from it's transcluded scope, you can use `$accordion` a
 ## Configuration
 
 #### SCSS
-If you are using SASS, you can import vTabs.scss file and override following variables:
+If you are using SASS, you can import vTabs.scss file and override the following variables:
 
 ```scss
 // Tabs
@@ -163,7 +163,7 @@ vTabs manages keyboard focus and adds some common aria-* attributes. BUT you sho
   <v-tab id="tab0{{$index}}" aria-controls="page0{{$index}}" ng-repeat="page in pages" ng-bind="page.title"></v-tab>
 </v-tabs>
 
-<v-pages class="vPages--default" active="tabs.active" ng-swipe-left="tabs.next()" ng-swipe-right="tabs.previous()">
+<v-pages class="vPages--default" active="tabs.active">
   <v-page id="page0{{$index}}" aria-labelledby="tab0{{$index}}" ng-repeat="page in pages" ng-bind="page.content"></v-page>
 </v-pages>
 ```
