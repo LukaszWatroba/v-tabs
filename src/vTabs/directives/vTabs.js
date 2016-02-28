@@ -84,7 +84,7 @@ function vTabsDirectiveController ($scope) {
     }
 
     return index;
-  }
+  };
 
   ctrl.addTab = function (tab) {
     $scope.tabs.push(tab);

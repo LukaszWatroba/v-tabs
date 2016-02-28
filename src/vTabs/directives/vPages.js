@@ -84,7 +84,7 @@ function vPagesDirectiveController ($scope) {
     }
 
     return index;
-  }
+  };
 
   ctrl.addPage = function (page) {
     $scope.pages.push(page);
