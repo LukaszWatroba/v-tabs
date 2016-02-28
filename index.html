@@ -30,11 +30,15 @@
     <script src="./dist/v-tabs.js"></script>
     <script src="./demo/app.js"></script>
 
+    <style>
+      .u-narrowWrapper { max-width: 32em; }
+    </style>
+
   </head>
 
   <body ng-app="myApp">
 
-    <div class="u-wrapper u-paddingHm u-paddingTl" ng-controller="MainController">
+    <div class="u-narrowWrapper u-paddingHm u-paddingTl" ng-controller="MainController">
 
       <header class="u-marginBl u-textCenter">
         <div>
@@ -50,51 +54,55 @@
       <div class="u-marginBl">
 
         <section class="u-paddingBl">
-          <h3 class="u-marginBl">Horizontal Tabs</h3>
 
-          <v-tabs class="vTabs--default" horizontal control="horizontalTabs" active="horizontalTabs.active">
-            <v-tab id="tab0{{$index}}" aria-controls="page0{{$index}}" ng-repeat="page in pages" ng-disabled="page.isDisabled" ng-bind="page.title"></v-tab>
+          <h3 class="u-marginBl">Tabs</h3>
+
+          <v-tabs class="vTabs--default" id="tebs" horizontal control="simpleTabs" active="simpleTabs.active">
+            <v-tab ng-repeat="page in pages" ng-bind="page.title"></v-tab>
           </v-tabs>
 
-          <v-pages class="vPages--default" active="horizontalTabs.active" ng-swipe-left="horizontalTabs.next()" ng-swipe-right="horizontalTabs.previous()">
-            <v-page id="page0{{$index}}" aria-labelledby="tab0{{$index}}" ng-repeat="page in pages">
+          <p class="u-marginVm"><small>Current: <b>{{ simpleTabs.active + 1 }}</b></small></p>
+
+          {{ $tabs }}
+        </section>
+
+        <section class="u-paddingBl">
+
+          <h3 class="u-marginBl">Pages</h3>
+
+          <v-pages class="vPages--default" control="simplePages" active="simplePages.active">
+            <v-page ng-repeat="page in pages">
               <div class="u-formatedText" ng-bind-html="page.content"></div>
             </v-page>
           </v-pages>
 
+          <p class="u-marginTm"><small>Current: <b>{{ simplePages.active + 1 }}</b></small></p>
+
+          <div class="ButtonGroup ButtonGroup--hz u-marginVm">
+            <div class="ButtonGroup-item u-marginRm">
+              <button class="Button" ng-click="simplePages.previous()">Previous</button>
+            </div>
+            <div class="ButtonGroup-item">
+              <button class="Button" ng-click="simplePages.next()">Next</button>
+            </div>
+          </div>
+
         </section>
 
         <section class="u-paddingBl">
-          <h3 class="u-marginBl">Vertical Tabs</h3>
 
-          <div class="Grid Grid--gutters">
-            <div class="Grid-cell u-size3of12">
+          <h3 class="u-marginBl">Tabs with pages</h3>
 
-              <v-tabs class="vTabs--default" vertical control="verticalTabs" active="verticalTabs.active">
-                <v-tab id="tab1{{$index}}" aria-controls="page1{{$index}}" ng-repeat="page in pages" ng-disabled="page.isDisabled" ng-bind="page.title"></v-tab>
-              </v-tabs>
+          <v-tabs class="vTabs--default" horizontal control="horizontalTabs" active="horizontalTabs.active">
+            <v-tab id="tabH_{{ ::page.id }}" aria-controls="pageV_{{ ::page.id }}" ng-repeat="page in pages" ng-bind="page.title"></v-tab>
+          </v-tabs>
 
-            </div>
+          <v-pages class="vPages--default" active="horizontalTabs.active" ng-swipe-left="horizontalTabs.next()" ng-swipe-right="horizontalTabs.previous()">
+            <v-page id="pageH_{{ ::page.id }}" aria-labelledby="tabH_{{ ::page.id }}" ng-repeat="page in pages">
+              <div class="u-formatedText" ng-bind-html="page.content"></div>
+            </v-page>
+          </v-pages>
 
-            <div class="Grid-cell u-size9of12">
-
-              <v-pages class="vPages--default" active="verticalTabs.active">
-                <v-page id="page1{{$index}}" aria-labelledby="tab1{{$index}}" ng-repeat="page in pages">
-                  <div class="u-formatedText" ng-bind-html="page.content"></div>
-                </v-page>
-              </v-pages>
-
-              <div class="ButtonGroup ButtonGroup--hz ButtonGroup--collapse u-marginTl">
-                <div class="ButtonGroup-item">
-                  <button class="Button Button--default" ng-click="verticalTabs.previous()">Previous</button>
-                </div>
-                <div class="ButtonGroup-item">
-                  <button class="Button Button--default" ng-click="verticalTabs.next()">Next</button>
-                </div>
-              </div>
-
-            </div>
-          </div>
         </section>
 
       </div>
