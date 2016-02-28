@@ -69,9 +69,9 @@
 
 #### Control
 
-Add `control` attribute and use following methods to control vTabs from it's parent scope:
+Use `control` attribute to control vTabs or vPages from it's parent scope:
 
-- `activate(index)`
+- `activate(indexOrId)`
 - `next()`
 - `previous()`
 
@@ -90,7 +90,7 @@ Add `control` attribute and use following methods to control vTabs from it's par
 
 #### Transcluded scope
 
-`$accordion` and `$pane` scope properties allows you to control the directive from it's transcluded scope.
+To control the directive from it's transcluded scope, you can use `$accordion` and `$pane` properties.
 
 ##### $tabs
 
