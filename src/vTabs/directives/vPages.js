@@ -146,7 +146,7 @@ function vPagesDirectiveController ($scope) {
     previous: function () {
       ctrl.previous();
     },
-    activate: function (index) {
+    activate: function (indexOrId) {
       if (angular.isString(indexOrId)) {
         $scope.activeIndex = ctrl.getPageIndexById(indexOrId);
       } else {
