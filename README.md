@@ -7,6 +7,7 @@
 ## Demos
 
   - [GitHub](http://lukaszwatroba.github.io/v-tabs)
+  - [CodePen](http://codepen.io/LukaszWatroba/pen/raEZzx)
 
 
 ## Usage
@@ -66,7 +67,13 @@
 
 ## API
 
-Add the `control` attribute to use API methods:
+#### Control
+
+Add `control` attribute and use following methods to control vTabs from it's parent scope:
+
+- `activate(index)`
+- `next()`
+- `previous()`
 
 ```html
 <v-tabs class="vTabs--default" control="tabs" active="tabs.active">
@@ -81,14 +88,74 @@ Add the `control` attribute to use API methods:
 <button type="button" ng-click="tabs.next()">Next</button>
 ```
 
-#### Methods
+#### Transcluded scope
 
-  - `activate(index)`
-  - `next()`
-  - `previous()`
+`$accordion` and `$pane` scope properties allows you to control the directive from it's transcluded scope.
+
+##### $tabs
+
+- `next()`
+- `previous()`
+- `activate(indexOrId)`
+
+##### $tab
+
+- `isActive()`
+- `activate()`
+
+##### $pages
+
+- `next()`
+- `previous()`
+- `activate(indexOrId)`
+
+##### $page
+
+- `isActive()`
+- `activate()`
+
+
+#### Events
+
+  - `vTabs:onReady` or `yourTabsId:onReady`
+  - `vPages:onReady` or `yourPagesId:onReady`
+
+
+## Configuration
+
+#### SCSS
+If you are using SASS, you can import vTabs.scss file and override following variables:
+
+```scss
+// Tabs
+$v-tabs-default-theme:    true !default;
+
+$v-tabs-spacing:          20px !default;
+
+$v-tabs-default-color:    #D8D8D8 !default;
+$v-tabs-active-color:     #2196F3 !default;
+
+$v-tabs-tab-min-width:    100px !default;
+
+$v-tabs-hover-animation-duration:  0.25s !default;
+$v-tabs-enter-animation-duration:  0.5s  !default;
+$v-tabs-leave-animation-duration:  0.25s !default;
+
+$v-tabs-disabled-opacity:          0.6 !default;
+
+
+// Pages
+$v-pages-default-theme:   true !default;
+
+$v-pages-spacing:         20px !default;
+
+$v-pages-enter-animation-duration:  0.5s  !default;
+$v-pages-leave-animation-duration:  0.25s !default;
+```
 
 
 ## Accessibility
+
 vTabs manages keyboard focus and adds some common aria-* attributes. BUT you should additionally place the `aria-controls` and `aria-labelledby`:
 
 ```html
