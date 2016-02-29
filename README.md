@@ -67,9 +67,9 @@
 
 ## API
 
-#### Control attribute
+#### Control
 
-Use the attribute to control vTabs or vPages from it's parent scope using the following methods:
+Use the attribute to control vTabs or vPages from it's parent scope. Here are some of the available methods:
 
 - `activate(indexOrId)`
 - `next()`
@@ -88,9 +88,9 @@ Use the attribute to control vTabs or vPages from it's parent scope using the fo
 <button type="button" ng-click="tabs.next()">Next</button>
 ```
 
-#### Transcluded scope
+#### Scope
 
-To control the directive from it's transcluded scope, use the following properties:
+To control the directive from it's transcluded scope, use the following properties and mathods:
 
 ##### $tabs
 
@@ -117,6 +117,8 @@ To control the directive from it's transcluded scope, use the following properti
 
 #### Events
 
+The directive emits the following events:
+
   - `vTabs:onReady` or `yourTabsId:onReady`
   - `vPages:onReady` or `yourPagesId:onReady`
 
@@ -124,6 +126,7 @@ To control the directive from it's transcluded scope, use the following properti
 ## Configuration
 
 #### SCSS
+
 If you are using SASS, you can import vTabs.scss file and override the following variables:
 
 ```scss
