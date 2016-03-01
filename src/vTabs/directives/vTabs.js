@@ -23,16 +23,6 @@ function vTabsDirective () {
         iElement.append(clone);
       });
 
-      function checkCustomControlAPIMethods () {
-        var protectedApiMethods = ['next', 'previous', 'activate'];
-
-        angular.forEach(protectedApiMethods, function (iteratedMethodName) {
-          if (scope.control[iteratedMethodName]) {
-            throw new Error('The `' + iteratedMethodName + '` method can not be overwritten');
-          }
-        });
-      }
-
       if (!angular.isDefined(scope.activeIndex) || !angular.isNumber(scope.activeIndex)) {
         scope.activeIndex = 0;
       }
@@ -42,9 +32,18 @@ function vTabsDirective () {
 
         var mergedControl = angular.extend({}, scope.internalControl, scope.control);
         scope.control = scope.internalControl = mergedControl;
-      }
-      else {
+      } else {
         scope.control = scope.internalControl;
+      }
+
+      function checkCustomControlAPIMethods () {
+        var protectedApiMethods = ['next', 'previous', 'activate'];
+
+        angular.forEach(protectedApiMethods, function (iteratedMethodName) {
+          if (scope.control[iteratedMethodName]) {
+            throw new Error('The `' + iteratedMethodName + '` method can not be overwritten');
+          }
+        });
       }
 
       scope.$applyAsync(function () {

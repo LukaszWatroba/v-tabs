@@ -24,19 +24,15 @@ function vTabDirective ($animate, tabsConfig) {
 
       iAttrs.$set('role', 'tab');
 
-      if (angular.isDefined(iAttrs.disabled)) {
-        scope.isDisabled = true;
-      }
-
       scope.isInactive = angular.isDefined(iAttrs.inactive);
-
       scope.tabsCtrl = tabsCtrl;
       scope.tabElement = iElement;
+      scope.focus = focus;
 
       tabsCtrl.addTab(scope);
 
-      function focus () {
-        iElement[0].focus();
+      if (angular.isDefined(iAttrs.disabled)) {
+        scope.isDisabled = true;
       }
 
       function activate () {
@@ -57,27 +53,19 @@ function vTabDirective ($animate, tabsConfig) {
         });
       }
 
-      iElement[0].onfocus = function () {
-        scope.$apply(function () {
-          scope.isFocused = true;
-        });
-      };
+      function focus () {
+        iElement[0].focus();
+      }
 
-      iElement[0].onblur = function () {
-        scope.$apply(function () {
-          scope.isFocused = false;
-        });
-      };
-
-      iElement.on('click', function () {
+      function onClick () {
         if (scope.isDisabled || scope.isInactive) { return false; }
 
         scope.$apply(function () {
           tabsCtrl.activate(scope);
         });
-      });
+      }
 
-      iElement.on('keydown', function (event) {
+      function onKeydown (event) {
         if (scope.isDisabled) { return false; }
 
         if (event.keyCode === 32  || event.keyCode === 13) {
@@ -90,30 +78,46 @@ function vTabDirective ($animate, tabsConfig) {
           tabsCtrl.focusPrevious();
           event.preventDefault();
         }
-      });
+      }
 
-      scope.focus = focus;
+      function onFocus () {
+        scope.$apply(function () {
+          scope.isFocused = true;
+        });
+      }
 
-      scope.$evalAsync(function () {
-        if (scope.isActive) {
-          $animate.addClass(iElement, tabsConfig.states.active);
+      function onBlur () {
+        scope.$apply(function () {
+          scope.isFocused = false;
+        });
+      }
 
-          iElement.attr({
-            'aria-selected': 'true',
-            'tabindex': '0'
-          });
-        } else {
-          iElement.attr({
-            'aria-selected': 'false',
-            'tabindex': '-1'
-          });
-        }
-      });
+      function onDestroy () {
+        iElement.off('click', onClick);
+        iElement.off('keydown', onKeydown);
+        iElement[0].onfocus = null;
+        iElement[0].onblur = null;
+      }
 
       scope.$watch('isActive', function (newValue, oldValue) {
         if (newValue === oldValue) { return false; }
         if (newValue) { activate(); }
         else { deactivate(); }
+      });
+
+      iElement.on('click', onClick);
+      iElement.on('keydown', onKeydown);
+      iElement[0].onfocus = onFocus;
+      iElement[0].onblur = onBlur;
+
+      scope.$on('$destroy', onDestroy);
+
+      scope.$evalAsync(function () {
+        if (scope.isActive) {
+          activate();
+        } else {
+          deactivate();
+        }
       });
     }
   };
@@ -126,7 +130,7 @@ function TabDirectiveController ($scope) {
   var ctrl = this;
 
   ctrl.isActive = function isActive () {
-    return $scope.isActive;
+    return !!$scope.isActive;
   };
 
   ctrl.activate = function activate () {

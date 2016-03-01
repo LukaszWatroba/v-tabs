@@ -23,6 +23,19 @@ function vPagesDirective () {
         iElement.append(clone);
       });
 
+      if (angular.isDefined(scope.control)) {
+        checkCustomControlAPIMethods();
+
+        var mergedControl = angular.extend({}, scope.internalControl, scope.control);
+        scope.control = scope.internalControl = mergedControl;
+      } else {
+        scope.control = scope.internalControl;
+      }
+
+      if (!angular.isDefined(scope.activeIndex) || !angular.isNumber(scope.activeIndex)) {
+        scope.activeIndex = 0;
+      }
+
       function checkCustomControlAPIMethods () {
         var protectedApiMethods = ['next', 'previous', 'activate'];
 
@@ -31,20 +44,6 @@ function vPagesDirective () {
             throw new Error('The `' + iteratedMethodName + '` method can not be overwritten');
           }
         });
-      }
-
-      if (!angular.isDefined(scope.activeIndex) || !angular.isNumber(scope.activeIndex)) {
-        scope.activeIndex = 0;
-      }
-
-      if (angular.isDefined(scope.control)) {
-        checkCustomControlAPIMethods();
-
-        var mergedControl = angular.extend({}, scope.internalControl, scope.control);
-        scope.control = scope.internalControl = mergedControl;
-      }
-      else {
-        scope.control = scope.internalControl;
       }
 
       scope.$applyAsync(function () {
@@ -79,7 +78,7 @@ function vPagesDirectiveController ($scope) {
         index = null;
 
     for (var i = 0; i < length; i++) {
-      var iteratedPage = $scope.tabs[i];
+      var iteratedPage = $scope.pages[i];
       if (iteratedPage.id && iteratedPage.id === id) { index = i; }
     }
 

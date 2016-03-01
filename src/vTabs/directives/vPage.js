@@ -17,21 +17,21 @@ function vPageDirective ($animate, pagesConfig) {
     },
     link: function (scope, iElement, iAttrs, pagesCtrl, transclude) {
       transclude(scope.$parent.$new(), function (clone, transclusionScope) {
-        transclusionScope.$tab = scope.internalControl;
-        if (scope.id) { transclusionScope.$tab.id = scope.id; }
+        transclusionScope.$page = scope.internalControl;
+        if (scope.id) { transclusionScope.$page.id = scope.id; }
         iElement.append(clone);
       });
 
       iAttrs.$set('role', 'tabpanel');
 
-      if (angular.isDefined(iAttrs.disabled)) {
-        scope.isDisabled = true;
-      }
-
       scope.pagesCtrl = pagesCtrl;
       scope.pageElement = iElement;
 
       pagesCtrl.addPage(scope);
+
+      if (angular.isDefined(iAttrs.disabled)) {
+        scope.isDisabled = true;
+      }
 
       function activate () {
         $animate.addClass(iElement, pagesConfig.states.active);
@@ -41,20 +41,16 @@ function vPageDirective ($animate, pagesConfig) {
         $animate.removeClass(iElement, pagesConfig.states.active);
       }
 
-      if (scope.isActive) {
-        iElement.addClass(pagesConfig.states.active);
-      }
-
-      scope.$evalAsync(function () {
-        if (scope.isActive) {
-          iElement.addClass(pagesConfig.states.active);
-        }
-      });
-
       scope.$watch('isActive', function (newValue, oldValue) {
         if (newValue === oldValue) { return false; }
         if (newValue) { activate(); }
         else { deactivate(); }
+      });
+
+      scope.$evalAsync(function () {
+        if (scope.isActive) {
+          activate();
+        }
       });
     }
   };
@@ -67,7 +63,7 @@ function PageDirectiveController ($scope) {
   var ctrl = this;
 
   ctrl.isActive = function isActive () {
-    return $scope.isActive;
+    return !!$scope.isActive;
   };
 
   ctrl.activate = function activate () {
