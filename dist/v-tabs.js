@@ -1,6 +1,6 @@
 /**
  * vTabs - dynamic, flexible and accessible AngularJS tabs.
- * @version v0.1.1
+ * @version v0.2.0
  * @link http://lukaszwatroba.github.io/v-tabs
  * @author Łukasz Wątroba <l@lukaszwatroba.com>
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -54,21 +54,21 @@ function vPageDirective ($animate, pagesConfig) {
     },
     link: function (scope, iElement, iAttrs, pagesCtrl, transclude) {
       transclude(scope.$parent.$new(), function (clone, transclusionScope) {
-        transclusionScope.$tab = scope.internalControl;
-        if (scope.id) { transclusionScope.$tab.id = scope.id; }
+        transclusionScope.$page = scope.internalControl;
+        if (scope.id) { transclusionScope.$page.id = scope.id; }
         iElement.append(clone);
       });
 
       iAttrs.$set('role', 'tabpanel');
 
-      if (angular.isDefined(iAttrs.disabled)) {
-        scope.isDisabled = true;
-      }
-
       scope.pagesCtrl = pagesCtrl;
       scope.pageElement = iElement;
 
       pagesCtrl.addPage(scope);
+
+      if (angular.isDefined(iAttrs.disabled)) {
+        scope.isDisabled = true;
+      }
 
       function activate () {
         $animate.addClass(iElement, pagesConfig.states.active);
@@ -78,20 +78,16 @@ function vPageDirective ($animate, pagesConfig) {
         $animate.removeClass(iElement, pagesConfig.states.active);
       }
 
-      if (scope.isActive) {
-        iElement.addClass(pagesConfig.states.active);
-      }
-
-      scope.$evalAsync(function () {
-        if (scope.isActive) {
-          iElement.addClass(pagesConfig.states.active);
-        }
-      });
-
       scope.$watch('isActive', function (newValue, oldValue) {
         if (newValue === oldValue) { return false; }
         if (newValue) { activate(); }
         else { deactivate(); }
+      });
+
+      scope.$evalAsync(function () {
+        if (scope.isActive) {
+          activate();
+        }
       });
     }
   };
@@ -104,7 +100,7 @@ function PageDirectiveController ($scope) {
   var ctrl = this;
 
   ctrl.isActive = function isActive () {
-    return $scope.isActive;
+    return !!$scope.isActive;
   };
 
   ctrl.activate = function activate () {
@@ -144,6 +140,19 @@ function vPagesDirective () {
         iElement.append(clone);
       });
 
+      if (angular.isDefined(scope.control)) {
+        checkCustomControlAPIMethods();
+
+        var mergedControl = angular.extend({}, scope.internalControl, scope.control);
+        scope.control = scope.internalControl = mergedControl;
+      } else {
+        scope.control = scope.internalControl;
+      }
+
+      if (!angular.isDefined(scope.activeIndex) || !angular.isNumber(scope.activeIndex)) {
+        scope.activeIndex = 0;
+      }
+
       function checkCustomControlAPIMethods () {
         var protectedApiMethods = ['next', 'previous', 'activate'];
 
@@ -152,20 +161,6 @@ function vPagesDirective () {
             throw new Error('The `' + iteratedMethodName + '` method can not be overwritten');
           }
         });
-      }
-
-      if (!angular.isDefined(scope.activeIndex) || !angular.isNumber(scope.activeIndex)) {
-        scope.activeIndex = 0;
-      }
-
-      if (angular.isDefined(scope.control)) {
-        checkCustomControlAPIMethods();
-
-        var mergedControl = angular.extend({}, scope.internalControl, scope.control);
-        scope.control = scope.internalControl = mergedControl;
-      }
-      else {
-        scope.control = scope.internalControl;
       }
 
       scope.$applyAsync(function () {
@@ -200,7 +195,7 @@ function vPagesDirectiveController ($scope) {
         index = null;
 
     for (var i = 0; i < length; i++) {
-      var iteratedPage = $scope.tabs[i];
+      var iteratedPage = $scope.pages[i];
       if (iteratedPage.id && iteratedPage.id === id) { index = i; }
     }
 
@@ -304,19 +299,15 @@ function vTabDirective ($animate, tabsConfig) {
 
       iAttrs.$set('role', 'tab');
 
-      if (angular.isDefined(iAttrs.disabled)) {
-        scope.isDisabled = true;
-      }
-
       scope.isInactive = angular.isDefined(iAttrs.inactive);
-
       scope.tabsCtrl = tabsCtrl;
       scope.tabElement = iElement;
+      scope.focus = focus;
 
       tabsCtrl.addTab(scope);
 
-      function focus () {
-        iElement[0].focus();
+      if (angular.isDefined(iAttrs.disabled)) {
+        scope.isDisabled = true;
       }
 
       function activate () {
@@ -337,27 +328,19 @@ function vTabDirective ($animate, tabsConfig) {
         });
       }
 
-      iElement[0].onfocus = function () {
-        scope.$apply(function () {
-          scope.isFocused = true;
-        });
-      };
+      function focus () {
+        iElement[0].focus();
+      }
 
-      iElement[0].onblur = function () {
-        scope.$apply(function () {
-          scope.isFocused = false;
-        });
-      };
-
-      iElement.on('click', function () {
+      function onClick () {
         if (scope.isDisabled || scope.isInactive) { return false; }
 
         scope.$apply(function () {
           tabsCtrl.activate(scope);
         });
-      });
+      }
 
-      iElement.on('keydown', function (event) {
+      function onKeydown (event) {
         if (scope.isDisabled) { return false; }
 
         if (event.keyCode === 32  || event.keyCode === 13) {
@@ -370,30 +353,46 @@ function vTabDirective ($animate, tabsConfig) {
           tabsCtrl.focusPrevious();
           event.preventDefault();
         }
-      });
+      }
 
-      scope.focus = focus;
+      function onFocus () {
+        scope.$apply(function () {
+          scope.isFocused = true;
+        });
+      }
 
-      scope.$evalAsync(function () {
-        if (scope.isActive) {
-          $animate.addClass(iElement, tabsConfig.states.active);
+      function onBlur () {
+        scope.$apply(function () {
+          scope.isFocused = false;
+        });
+      }
 
-          iElement.attr({
-            'aria-selected': 'true',
-            'tabindex': '0'
-          });
-        } else {
-          iElement.attr({
-            'aria-selected': 'false',
-            'tabindex': '-1'
-          });
-        }
-      });
+      function onDestroy () {
+        iElement.off('click', onClick);
+        iElement.off('keydown', onKeydown);
+        iElement[0].onfocus = null;
+        iElement[0].onblur = null;
+      }
 
       scope.$watch('isActive', function (newValue, oldValue) {
         if (newValue === oldValue) { return false; }
         if (newValue) { activate(); }
         else { deactivate(); }
+      });
+
+      iElement.on('click', onClick);
+      iElement.on('keydown', onKeydown);
+      iElement[0].onfocus = onFocus;
+      iElement[0].onblur = onBlur;
+
+      scope.$on('$destroy', onDestroy);
+
+      scope.$evalAsync(function () {
+        if (scope.isActive) {
+          activate();
+        } else {
+          deactivate();
+        }
       });
     }
   };
@@ -406,7 +405,7 @@ function TabDirectiveController ($scope) {
   var ctrl = this;
 
   ctrl.isActive = function isActive () {
-    return $scope.isActive;
+    return !!$scope.isActive;
   };
 
   ctrl.activate = function activate () {
@@ -446,16 +445,6 @@ function vTabsDirective () {
         iElement.append(clone);
       });
 
-      function checkCustomControlAPIMethods () {
-        var protectedApiMethods = ['next', 'previous', 'activate'];
-
-        angular.forEach(protectedApiMethods, function (iteratedMethodName) {
-          if (scope.control[iteratedMethodName]) {
-            throw new Error('The `' + iteratedMethodName + '` method can not be overwritten');
-          }
-        });
-      }
-
       if (!angular.isDefined(scope.activeIndex) || !angular.isNumber(scope.activeIndex)) {
         scope.activeIndex = 0;
       }
@@ -465,9 +454,18 @@ function vTabsDirective () {
 
         var mergedControl = angular.extend({}, scope.internalControl, scope.control);
         scope.control = scope.internalControl = mergedControl;
-      }
-      else {
+      } else {
         scope.control = scope.internalControl;
+      }
+
+      function checkCustomControlAPIMethods () {
+        var protectedApiMethods = ['next', 'previous', 'activate'];
+
+        angular.forEach(protectedApiMethods, function (iteratedMethodName) {
+          if (scope.control[iteratedMethodName]) {
+            throw new Error('The `' + iteratedMethodName + '` method can not be overwritten');
+          }
+        });
       }
 
       scope.$applyAsync(function () {
