@@ -74,8 +74,8 @@ describe('vTabs directive', function () {
   });
 
 
-  it('should set accordion `internalControl` as `$tabs` property on transcluded scope', function () {
-    var options = { attributes: 'id="test"', content: '<v-tab></v-tab>' };
+  it('should set tabs `internalControl` as `$tabs` property on transcluded scope', function () {
+    var options = { attributes: 'id="tabs"', content: '<v-tab></v-tab>' };
     var template = generateTemplate(options);
 
     var tabs = $compile(template)(scope);
@@ -84,10 +84,32 @@ describe('vTabs directive', function () {
 
     expect(scope.$tabs).not.toBeDefined();
     expect(transcludedScope.$tabs).toBeDefined();
-    expect(transcludedScope.$tabs.id).toEqual('test');
+    expect(transcludedScope.$tabs.id).toEqual('tabs');
     expect(transcludedScope.$tabs.next).toBeDefined();
     expect(transcludedScope.$tabs.previous).toBeDefined();
     expect(transcludedScope.$tabs.activate).toBeDefined();
+  });
+
+
+  it('should change `activeIndex` property using `$tabs` methods', function () {
+    var template =  '<v-tabs>\n' +
+                    '  <v-tab id="tab1"></v-tab>\n' +
+                    '  <v-tab id="tab2"></v-tab>\n' +
+                    '</v-tabs>\n';
+
+    var tabs = $compile(template)(scope);
+    var $tabs = tabs.find('v-tab').first().scope().$tabs;
+    var isolateScope = tabs.isolateScope();
+
+    expect(isolateScope.activeIndex).toBe(0);
+    $tabs.activate(1);
+    expect(isolateScope.activeIndex).toBe(1);
+    $tabs.activate('tab1');
+    expect(isolateScope.activeIndex).toBe(0);
+    $tabs.next();
+    expect(isolateScope.activeIndex).toBe(1);
+    $tabs.previous();
+    expect(isolateScope.activeIndex).toBe(0);
   });
 
 
